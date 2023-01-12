@@ -44,8 +44,7 @@ abstract class AbstractBus
     protected function registerCallableHandler(
         callable $callable,
         string $parameterType,
-    ): void
-    {
+    ): void {
         $reflectionMethod = new \ReflectionMethod($callable, '__invoke');
         foreach ($reflectionMethod->getParameters() as $parameter) {
             $type = $parameter->getType();
@@ -68,8 +67,7 @@ abstract class AbstractBus
     protected function registerHandlerClass(
         Interactable $handler,
         string $attributeType,
-    ): void
-    {
+    ): void {
         $reflectionClass = new \ReflectionClass($handler);
         $attributes = $reflectionClass->getAttributes();
         foreach ($attributes as $attribute) {
