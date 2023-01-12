@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/geekcell/php-ddd/compare/v1.0.0...v2.0.0) (2023-01-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update contracts for command and query bus.
+
+### Code Refactoring
+
+* Update contracts for command and query bus. ([a5b8957](https://github.com/geekcell/php-ddd/commit/a5b89573ad5f282a5b8b510a815332a6f2fe2f0a))
+
 ## 1.0.0 (2023-01-12)
 
 
