@@ -39,12 +39,32 @@ class TestCommandHandler implements CommandHandler
 /**
  * Test fixture for InMemoryCommandBus.
  */
+#[For\Command(TestCommand::class, 'handle')]
+class TestCommandHandlerWithExplicitHandleMethod implements CommandHandler
+{
+    public function handle(TestCommand $command): mixed
+    {
+        return __CLASS__;
+    }
+}
+
+/**
+ * Test fixture for InMemoryCommandBus.
+ */
 class TestCommandHandlerWithoutAttributes implements CommandHandler
 {
     public function execute(Command $command): mixed
     {
         return __CLASS__;
     }
+}
+
+/**
+ * Test fixture for InMemoryCommandBus.
+ */
+#[For\Command(TestCommand::class)]
+class TestComamndHandlerWithoutExecuteMethod implements CommandHandler
+{
 }
 
 /**
@@ -60,7 +80,7 @@ class CallableCommandHandler
 
 final class CommandBusTest extends TestCase
 {
-    public function testAddHandlerClass(): void
+    public function testRegisterHandlerClass(): void
     {
         // Given
         $commandBus = new InMemoryCommandBus();
@@ -73,7 +93,24 @@ final class CommandBusTest extends TestCase
         self::assertEquals(TestCommandHandler::class, $result);
     }
 
-    public function testAddHandlerClassWithoutAttributes(): void
+    public function testRegisterHandlerClassWithExplicitHandleMethod(): void
+    {
+        // Given
+        $commandBus = new InMemoryCommandBus();
+        $commandBus->registerHandler(
+            new TestCommandHandlerWithExplicitHandleMethod());
+
+        // When
+        $result = $commandBus->dispatch(new TestCommand());
+
+        // Then
+        self::assertEquals(
+            TestCommandHandlerWithExplicitHandleMethod::class,
+            $result,
+        );
+    }
+
+    public function testRegisterHandlerClassWithoutAttributes(): void
     {
         // Given
         $commandBus = new InMemoryCommandBus();
@@ -86,7 +123,14 @@ final class CommandBusTest extends TestCase
         self::assertNull($result);
     }
 
-    public function testAddCallableHandler(): void
+    public function testRegisterHandlerClassWithoutExecuteMethod(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new InMemoryCommandBus())
+            ->registerHandler(new TestComamndHandlerWithoutExecuteMethod());
+    }
+
+    public function testRegisterCallableHandler(): void
     {
         // Given
         $commandBus = new InMemoryCommandBus();
@@ -99,7 +143,20 @@ final class CommandBusTest extends TestCase
         self::assertEquals(CallableCommandHandler::class, $result);
     }
 
-    public function testAddCallableHandlerWithUnknownCommand(): void
+    public function testRegisterCallableHandlerWithAnonymousFunction(): void
+    {
+        // Given
+        $commandBus = new InMemoryCommandBus();
+        $commandBus->registerHandler(fn (TestCommand $command) => 'function');
+
+        // When
+        $result = $commandBus->dispatch(new TestCommand());
+
+        // Then
+        self::assertEquals('function', $result);
+    }
+
+    public function testRegisterCallableHandlerWithUnknownCommand(): void
     {
         // Given
         $commandBus = new InMemoryCommandBus();
@@ -110,5 +167,12 @@ final class CommandBusTest extends TestCase
 
         // Then
         self::assertNull($result);
+    }
+
+    public function testRegisterCallableHandlerWithMissingParameter(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new InMemoryCommandBus())
+            ->registerHandler(fn (string $foo) => 'this will never be called');
     }
 }

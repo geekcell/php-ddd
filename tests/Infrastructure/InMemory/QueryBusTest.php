@@ -39,12 +39,32 @@ class TestQueryHandler implements QueryHandler
 /**
  * Test fixture for InMemoryQueryBus.
  */
+#[For\Query(TestQuery::class, 'handle')]
+class TestQueryHandlerWithExplicitHandleMethod implements QueryHandler
+{
+    public function handle(TestQuery $query): mixed
+    {
+        return __CLASS__;
+    }
+}
+
+/**
+ * Test fixture for InMemoryQueryBus.
+ */
 class TestQueryHandlerWithoutAttributes implements QueryHandler
 {
     public function execute(Query $query): mixed
     {
         return __CLASS__;
     }
+}
+
+/**
+ * Test fixture for InMemoryCommandBus.
+ */
+#[For\Query(TestQuery::class)]
+class TestQueryHandlerWithoutExecuteMethod implements QueryHandler
+{
 }
 
 /**
@@ -60,7 +80,7 @@ class CallableQueryHandler
 
 final class QueryBusTest extends TestCase
 {
-    public function testAddHandlerClass(): void
+    public function testRegisterHandlerClass(): void
     {
         // Given
         $queryBus = new InMemoryQueryBus();
@@ -73,7 +93,24 @@ final class QueryBusTest extends TestCase
         self::assertEquals(TestQueryHandler::class, $result);
     }
 
-    public function testAddHandlerClassWithoutAttributes(): void
+    public function testRegisterHandlerClassWithExplicitHandleMethod(): void
+    {
+        // Given
+        $queryBus = new InMemoryQueryBus();
+        $queryBus->registerHandler(
+            new TestQueryHandlerWithExplicitHandleMethod());
+
+        // When
+        $result = $queryBus->dispatch(new TestQuery());
+
+        // Then
+        self::assertEquals(
+            TestQueryHandlerWithExplicitHandleMethod::class,
+            $result
+        );
+    }
+
+    public function testRegisterHandlerClassWithoutAttributes(): void
     {
         // Given
         $queryBus = new InMemoryQueryBus();
@@ -86,7 +123,14 @@ final class QueryBusTest extends TestCase
         self::assertNull($result);
     }
 
-    public function testAddCallableHandler(): void
+    public function testRegisterHandlerClassWithoutExecuteMethod(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new InMemoryQueryBus())->registerHandler(
+            new TestQueryHandlerWithoutExecuteMethod());
+    }
+
+    public function testRegisterCallableHandler(): void
     {
         // Given
         $queryBus = new InMemoryQueryBus();
@@ -99,7 +143,20 @@ final class QueryBusTest extends TestCase
         self::assertEquals(CallableQueryHandler::class, $result);
     }
 
-    public function testAddCallableHandlerWithUnknownCommand(): void
+    public function testRegisterCallableHandlerWithAnonymousFunction(): void
+    {
+        // Given
+        $queryBus = new InMemoryQueryBus();
+        $queryBus->registerHandler(fn (TestQuery $command) => 'function');
+
+        // When
+        $result = $queryBus->dispatch(new TestQuery());
+
+        // Then
+        self::assertEquals('function', $result);
+    }
+
+    public function testRegisterCallableHandlerWithUnknownCommand(): void
     {
         // Given
         $queryBus = new InMemoryQueryBus();
@@ -110,5 +167,12 @@ final class QueryBusTest extends TestCase
 
         // Then
         self::assertNull($result);
+    }
+
+    public function testRegisterCallableHandlerWithMissingParameter(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new InMemoryQueryBus())
+            ->registerHandler(fn (string $foo) => 'this will never be called');
     }
 }

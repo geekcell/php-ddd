@@ -45,15 +45,22 @@ abstract class AbstractBus
         callable $callable,
         string $parameterType,
     ): void {
-        $reflectionMethod = new \ReflectionMethod($callable, '__invoke');
-        foreach ($reflectionMethod->getParameters() as $parameter) {
+        $closure = \Closure::fromCallable($callable);
+        $handler = new \ReflectionFunction($closure);
+        foreach ($handler->getParameters() as $parameter) {
             $type = $parameter->getType();
             if (
                 is_subclass_of($type->getName(), $parameterType) &&
                 $type->allowsNull() === false) {
-                $this->handlers[$type->getName()] = $callable;
+                $this->handlers[$type->getName()] = $closure;
+                return;
             }
         }
+
+        throw new \InvalidArgumentException(sprintf(
+            'The callable handler must include a parameter of type %s',
+            $parameterType
+        ));
     }
 
     /**
@@ -89,8 +96,15 @@ abstract class AbstractBus
                         $handler,
                         $method->getName()
                     ];
+                    return;
                 }
             }
+
+            throw new \InvalidArgumentException(sprintf(
+                "The handler class %s does not have a method named '%s'",
+                $reflectionClass->getName(),
+                $context->getHandler(),
+            ));
         }
     }
 }
