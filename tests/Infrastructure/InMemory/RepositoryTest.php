@@ -43,21 +43,6 @@ class InMemoryTestRepository extends InMemoryRepository
     {
         $this->items = $items;
     }
-
-    public function isPaginated(): bool
-    {
-        return $this->isPaginated;
-    }
-
-    public function getItemsPerPage(): ?int
-    {
-        return $this->itemsPerPage;
-    }
-
-    public function getCurrentPage(): ?int
-    {
-        return $this->currentPage;
-    }
 }
 
 class InMemoryRepositoryTest extends TestCase
@@ -111,9 +96,7 @@ class InMemoryRepositoryTest extends TestCase
         $result = $repository->collect();
 
         // Then
-        $this->assertFalse($result->isPaginated());
-        $this->assertNull($result->getItemsPerPage());
-        $this->assertNull($result->getCurrentPage());
+        $this->assertInstanceOf(CounterCollection::class, $result);
         $this->assertEquals(count($this->items), count($result));
     }
 
@@ -131,9 +114,7 @@ class InMemoryRepositoryTest extends TestCase
         $result = $repository->paginate(2);
 
         // Then
-        $this->assertTrue($result->isPaginated());
-        $this->assertEquals(2, $result->getItemsPerPage());
-        $this->assertEquals(1, $result->getCurrentPage());
+        $this->assertInstanceOf(InMemoryPaginator::class, $result);
         $this->assertEquals(2, count($result));
     }
 
@@ -142,27 +123,12 @@ class InMemoryRepositoryTest extends TestCase
         // Given
         $repository = new InMemoryTestRepository();
         $repository->setItems($this->items);
+        $collection = $repository->collect();
 
         // When
-        $result = $repository->collect();
+        $result = $repository->getIterator();
 
         // Then
-        $this->assertInstanceOf(Collection::class, $result->getIterator());
-    }
-
-    public function testGetIteratorWithPagination(): void
-    {
-        // Given
-        $repository = new InMemoryTestRepository();
-        $repository->setItems($this->items);
-
-        // When
-        $result = $repository->paginate(2);
-
-        // Then
-        $this->assertInstanceOf(
-            InMemoryPaginator::class,
-            $result->getIterator()
-        );
+        $this->assertEquals($collection->getIterator(), $result);
     }
 }

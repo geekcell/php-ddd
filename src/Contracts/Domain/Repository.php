@@ -5,24 +5,28 @@ declare(strict_types=1);
 namespace GeekCell\Ddd\Contracts\Domain;
 
 use Countable;
+use GeekCell\Ddd\Domain\Collection;
 use IteratorAggregate;
 
 interface Repository extends Countable, IteratorAggregate
 {
     /**
-     * Returns a new instance of the repository without pagination.
+     * Returns a collection of items.
      *
-     * @return static
+     * @return Collection
      */
-    public function collect(): static;
+    public function collect(): Collection;
 
     /**
-     * Returns a new instance of the repository with pagination.
+     * Returns a paginator to paginate the items.
      *
      * @param int $itemsPerPage
      * @param int $currentPage
      *
-     * @return static
+     * @return Paginator
      */
-    public function paginate(int $itemsPerPage, int $currentPage = 1): static;
+    public function paginate(
+        int $itemsPerPage,
+        int $currentPage = 1
+    ): Paginator;
 }

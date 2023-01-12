@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace GeekCell\Ddd\Infrastructure\InMemory;
 
 use Assert\Assert;
+use GeekCell\Ddd\Contracts\Domain\Paginator;
 use GeekCell\Ddd\Contracts\Domain\Repository as RepositoryInterface;
+use GeekCell\Ddd\Domain\Collection;
 use GeekCell\Ddd\Infrastructure\InMemory\Paginator as InMemoryPaginator;
 use Traversable;
 
@@ -15,21 +17,6 @@ abstract class Repository implements RepositoryInterface
      * @var T[]
      */
     protected array $items = [];
-
-    /**
-     * @var int|null
-     */
-    protected ?int $itemsPerPage = null;
-
-    /**
-     * @var int|null
-     */
-    protected ?int $currentPage = null;
-
-    /**
-     * @var bool
-     */
-    protected bool $isPaginated = false;
 
     /**
      * @template T of object
@@ -50,27 +37,22 @@ abstract class Repository implements RepositoryInterface
     /**
      * @inheritDoc
      */
-    public function collect(): static
+    public function collect(): Collection
     {
-        $clone = clone $this;
-        $clone->itemsPerPage = null;
-        $clone->currentPage = null;
-        $clone->isPaginated = false;
-
-        return $clone;
+        $collectionClass = $this->collectionType;
+        return new $collectionClass($this->items);
     }
 
     /**
      * @inheritDoc
      */
-    public function paginate(int $itemsPerPage, int $currentPage = 1): static
+    public function paginate(int $itemsPerPage, int $currentPage = 1): Paginator
     {
-        $clone = clone $this;
-        $clone->itemsPerPage = $itemsPerPage;
-        $clone->currentPage = $currentPage;
-        $clone->isPaginated = true;
-
-        return $clone;
+        return new InMemoryPaginator(
+            $this->collect(),
+            $itemsPerPage,
+            $currentPage
+        );
     }
 
     /**
@@ -78,17 +60,7 @@ abstract class Repository implements RepositoryInterface
      */
     public function getIterator(): Traversable
     {
-        $collectionClass = $this->collectionType;
-        $collection = new $collectionClass($this->items);
-        if ($this->isPaginated) {
-            return new InMemoryPaginator(
-                $collection,
-                $this->itemsPerPage,
-                $this->currentPage
-            );
-        }
-
-        return $collection;
+        return $this->collect()->getIterator();
     }
 
     /**
