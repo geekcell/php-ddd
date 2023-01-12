@@ -34,11 +34,17 @@ abstract class Repository implements RepositoryInterface
     /**
      * @template T of object
      * @extends IteratorAggregate<T>
+     *
+     * @param class-string<T> $itemType
+     * @param class-string<Collection<T>> $collectionType
      */
-    public function __construct()
+    public function __construct(
+        private string $itemType,
+        private string $collectionType,
+    )
     {
-        Assert::that($this->itemType())->classExists();
-        Assert::that($this->collectionType())->classExists();
+        Assert::that($this->itemType)->classExists();
+        Assert::that($this->collectionType)->classExists();
     }
 
     /**
@@ -72,7 +78,7 @@ abstract class Repository implements RepositoryInterface
      */
     public function getIterator(): Traversable
     {
-        $collectionClass = $this->collectionType();
+        $collectionClass = $this->collectionType;
         $collection = new $collectionClass($this->items);
         if ($this->isPaginated) {
             return new InMemoryPaginator(
@@ -92,18 +98,4 @@ abstract class Repository implements RepositoryInterface
     {
         return count(iterator_to_array($this->getIterator()));
     }
-
-    /**
-     * Return the type of the items managed in the repository.
-     * This is a poor man's workaround for missing generics in PHP.
-     *
-     * @return string
-     */
-    abstract protected function itemType(): string;
-
-    /**
-     * Return the type of the collection managed in the repository.
-     * This is a poor man's workaround for missing generics in PHP.
-     */
-    abstract protected function collectionType(): string;
 }

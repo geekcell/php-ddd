@@ -31,14 +31,12 @@ class CounterCollection extends Collection
  */
 class InMemoryTestRepository extends InMemoryRepository
 {
-    protected function itemType(): string
+    public function __construct()
     {
-        return Counter::class;
-    }
-
-    protected function collectionType(): string
-    {
-        return CounterCollection::class;
+        parent::__construct(
+            Counter::class,
+            CounterCollection::class
+        );
     }
 
     public function setItems(array $items): void
@@ -89,14 +87,12 @@ class InMemoryRepositoryTest extends TestCase
 
         // When
         $instance = new class () extends InMemoryRepository {
-            protected function itemType(): string
+            public function __construct()
             {
-                return 'Foo\Bar\Baz';
-            }
-
-            protected function collectionType(): string
-            {
-                return 'Foo\Bar\BazCollection';
+                parent::__construct(
+                    'Foo\Bar\Baz',
+                    'Foo\Bar\BazCollection'
+                );
             }
         };
     }
