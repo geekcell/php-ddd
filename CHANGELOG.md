@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/geekcell/php-ddd/compare/v2.0.0...v3.0.0) (2023-01-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* Use item and collection types as constructor arguments
+
+### Code Refactoring
+
+* Use item and collection types as constructor arguments ([050ffcc](https://github.com/geekcell/php-ddd/commit/050ffcce4ef49aa1db2921713f6a79d428c567d3))
+
 ## [2.0.0](https://github.com/geekcell/php-ddd/compare/v1.0.0...v2.0.0) (2023-01-12)
 
 
