@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace GeekCell\Ddd\Infrastructure;
+namespace GeekCell\Ddd\Infrastructure\InMemory;
 
 use Assert\Assert;
-use GeekCell\Ddd\Contracts\Domain\Repository as Repository;
-use GeekCell\Ddd\Infrastructure\InMemoryPaginator;
+use GeekCell\Ddd\Contracts\Domain\Repository as RepositoryInterface;
+use GeekCell\Ddd\Infrastructure\InMemory\Paginator as InMemoryPaginator;
 use Traversable;
 
-abstract class InMemoryRepository implements Repository
+abstract class Repository implements RepositoryInterface
 {
     /**
      * @var T[]

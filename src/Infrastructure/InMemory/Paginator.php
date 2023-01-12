@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace GeekCell\Ddd\Infrastructure;
+namespace GeekCell\Ddd\Infrastructure\InMemory;
 
 use EmptyIterator;
-use GeekCell\Ddd\Contracts\Domain\Paginator;
+use GeekCell\Ddd\Contracts\Domain\Paginator as PaginatorInterface;
 use GeekCell\Ddd\Domain\Collection;
 use LimitIterator;
 use Traversable;
 
-class InMemoryPaginator implements Paginator
+class Paginator implements PaginatorInterface
 {
     public function __construct(
         private readonly Collection $collection,

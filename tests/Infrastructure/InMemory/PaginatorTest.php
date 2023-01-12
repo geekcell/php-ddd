@@ -2,23 +2,18 @@
 
 declare(strict_types=1);
 
+namespace GeekCell\Ddd\Tests\Infrastructure\InMemory;
+
+use ArrayIterator;
+use EmptyIterator;
 use GeekCell\Ddd\Domain\Collection;
-use GeekCell\Ddd\Infrastructure\InMemoryPaginator;
+use GeekCell\Ddd\Infrastructure\InMemory\Paginator as InMemoryPaginator;
+use GeekCell\Ddd\Tests\Fixtures\Counter;
+use LimitIterator;
+use Mockery;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Test fixture for InMemoryPaginator.
- *
- * @package GeekCell\Ddd\Tests\Infrastructure
- */
-class Counter
-{
-    public function __construct(private int $value)
-    {
-    }
-}
-
-class InMemoryPaginatorTest extends TestCase
+class PaginatorTest extends TestCase
 {
     public function testGetCurrentPage(): void
     {

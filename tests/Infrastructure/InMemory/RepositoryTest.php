@@ -2,25 +2,14 @@
 
 declare(strict_types=1);
 
-namespace GeekCell\Ddd\Tests\Infrastructure;
+namespace GeekCell\Ddd\Tests\Infrastructure\InMemory;
 
 use Assert;
 use GeekCell\Ddd\Domain\Collection;
-use GeekCell\Ddd\Infrastructure\InMemoryPaginator;
-use GeekCell\Ddd\Infrastructure\InMemoryRepository;
+use GeekCell\Ddd\Infrastructure\InMemory\Paginator as InMemoryPaginator;
+use GeekCell\Ddd\Infrastructure\InMemory\Repository as InMemoryRepository;
+use GeekCell\Ddd\Tests\Fixtures\Counter;
 use PHPUnit\Framework\TestCase;
-
-/**
- * Test fixture for InMemoryRepository.
- *
- * @package GeekCell\Ddd\Tests\Infrastructure
- */
-class Counter
-{
-    public function __construct(private int $value)
-    {
-    }
-}
 
 /**
  * Test fixture for InMemoryRepository.
