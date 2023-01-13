@@ -98,7 +98,8 @@ final class QueryBusTest extends TestCase
         // Given
         $queryBus = new InMemoryQueryBus();
         $queryBus->registerHandler(
-            new TestQueryHandlerWithExplicitHandleMethod());
+            new TestQueryHandlerWithExplicitHandleMethod()
+        );
 
         // When
         $result = $queryBus->dispatch(new TestQuery());
@@ -127,7 +128,8 @@ final class QueryBusTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         (new InMemoryQueryBus())->registerHandler(
-            new TestQueryHandlerWithoutExecuteMethod());
+            new TestQueryHandlerWithoutExecuteMethod()
+        );
     }
 
     public function testRegisterCallableHandler(): void

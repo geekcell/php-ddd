@@ -28,8 +28,7 @@ abstract class Repository implements RepositoryInterface
     public function __construct(
         private string $itemType,
         private string $collectionType,
-    )
-    {
+    ) {
         Assert::that($this->itemType)->classExists();
         Assert::that($this->collectionType)->classExists();
     }

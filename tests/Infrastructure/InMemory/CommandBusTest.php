@@ -98,7 +98,8 @@ final class CommandBusTest extends TestCase
         // Given
         $commandBus = new InMemoryCommandBus();
         $commandBus->registerHandler(
-            new TestCommandHandlerWithExplicitHandleMethod());
+            new TestCommandHandlerWithExplicitHandleMethod()
+        );
 
         // When
         $result = $commandBus->dispatch(new TestCommand());
