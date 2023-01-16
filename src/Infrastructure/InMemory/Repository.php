@@ -23,14 +23,11 @@ abstract class Repository implements RepositoryInterface
      * @extends IteratorAggregate<T>
      *
      * @param class-string<T> $itemType
-     * @param class-string<Collection<T>> $collectionType
      */
     public function __construct(
         private string $itemType,
-        private string $collectionType,
     ) {
         Assert::that($this->itemType)->classExists();
-        Assert::that($this->collectionType)->classExists();
     }
 
     /**
@@ -38,8 +35,7 @@ abstract class Repository implements RepositoryInterface
      */
     public function collect(): Collection
     {
-        $collectionClass = $this->collectionType;
-        return new $collectionClass($this->items);
+        return new Collection($this->items, $this->itemType);
     }
 
     /**

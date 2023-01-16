@@ -17,33 +17,20 @@ class Foo
 {
 }
 
-/**
- * Test subject.
- *
- * @package GeekCell\Ddd\Tests\Domain
- */
-class TestCollection extends Collection
-{
-    protected function itemType(): string
-    {
-        return Foo::class;
-    }
-}
-
 class CollectionTest extends TestCase
 {
-    public function testConstructor(): void
+    public function testTypedConstructor(): void
     {
         // Given
         $items = [new Foo(), new Foo(), new Foo()];
 
         // When
-        $collection = new TestCollection($items);
+        $collection = new Collection($items, Foo::class);
 
-        $this->assertInstanceOf(TestCollection::class, $collection);
+        $this->assertInstanceOf(Collection::class, $collection);
     }
 
-    public function testConstructorWithInvalidType(): void
+    public function testTypedConstructorWithInvalidType(): void
     {
         // Given
         $items = [new Foo(), new Foo(), new \stdClass()];
@@ -52,7 +39,18 @@ class CollectionTest extends TestCase
         $this->expectException(Assert\InvalidArgumentException::class);
 
         // When
-        $collection = new TestCollection($items);
+        $collection = new Collection($items, Foo::class);
+    }
+
+    public function testUntypedConstructor(): void
+    {
+        // Given
+        $items = [new Foo(), new \stdClass(), 42, 'foo'];
+
+        // When
+        $collection = new Collection($items);
+
+        $this->assertInstanceOf(Collection::class, $collection);
     }
 
     public function testCount(): void
@@ -61,7 +59,7 @@ class CollectionTest extends TestCase
         $items = [new Foo(), new Foo(), new Foo()];
 
         // When
-        $collection = new TestCollection($items);
+        $collection = new Collection($items, Foo::class);
 
         // Then
         $this->assertCount(3, $collection);
@@ -73,7 +71,7 @@ class CollectionTest extends TestCase
         $items = [new Foo(), new Foo(), new Foo()];
 
         // When
-        $collection = new TestCollection($items);
+        $collection = new Collection($items, Foo::class);
 
         // Then
         $this->assertEquals($items, iterator_to_array($collection));

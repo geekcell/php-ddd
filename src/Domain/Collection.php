@@ -10,18 +10,22 @@ use Countable;
 use IteratorAggregate;
 use Traversable;
 
-abstract class Collection implements Countable, IteratorAggregate
+class Collection implements Countable, IteratorAggregate
 {
     /**
      * @template T of object
      * @extends IteratorAggregate<T>
      *
      * @param T[] $items
+     * @param class-string<T> $itemType
      */
     final public function __construct(
         private readonly array $items = [],
+        ?string $itemType = null,
     ) {
-        Assert\Assertion::allIsInstanceOf($items, $this->itemType());
+        if ($itemType !== null) {
+            Assert\Assertion::allIsInstanceOf($items, $itemType);
+        }
     }
 
     /**
@@ -39,16 +43,4 @@ abstract class Collection implements Countable, IteratorAggregate
     {
         return count($this->items);
     }
-
-    /**
-     * @inheritDoc
-     */
-
-    /**
-     * Return the type of the items in the collection.
-     * This is a poor man's workaround for missing generics in PHP.
-     *
-     * @return string
-     */
-    abstract protected function itemType(): string;
 }

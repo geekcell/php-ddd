@@ -12,19 +12,6 @@ use GeekCell\Ddd\Tests\Fixtures\Counter;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test fixture for InMemoryRepository.
- *
- * @package GeekCell\Ddd\Tests\Infrastructure
- */
-class CounterCollection extends Collection
-{
-    protected function itemType(): string
-    {
-        return Counter::class;
-    }
-}
-
-/**
  * Test subject.
  *
  * @package GeekCell\Ddd\Tests\Infrastructure
@@ -33,10 +20,7 @@ class InMemoryTestRepository extends InMemoryRepository
 {
     public function __construct()
     {
-        parent::__construct(
-            Counter::class,
-            CounterCollection::class
-        );
+        parent::__construct(Counter::class);
     }
 
     public function setItems(array $items): void
@@ -74,10 +58,7 @@ class InMemoryRepositoryTest extends TestCase
         $instance = new class () extends InMemoryRepository {
             public function __construct()
             {
-                parent::__construct(
-                    'Foo\Bar\Baz',
-                    'Foo\Bar\BazCollection'
-                );
+                parent::__construct('Foo\Bar\Baz');
             }
         };
     }
@@ -96,7 +77,7 @@ class InMemoryRepositoryTest extends TestCase
         $result = $repository->collect();
 
         // Then
-        $this->assertInstanceOf(CounterCollection::class, $result);
+        $this->assertInstanceOf(Collection::class, $result);
         $this->assertEquals(count($this->items), count($result));
     }
 
