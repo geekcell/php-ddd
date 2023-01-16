@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/geekcell/php-ddd/compare/v1.0.0...v1.0.1) (2023-01-16)
+
+
+### Bug Fixes
+
+* Remove package from docstring. ([a74b1ac](https://github.com/geekcell/php-ddd/commit/a74b1ac3cbc1d03681e574e339c4c6d2b4b433f2))
+
 ## [1.0.0](https://github.com/geekcell/php-ddd/compare/v2.0.0...v1.0.0) (2023-01-16)
 
 
