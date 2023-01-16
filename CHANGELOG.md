@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/geekcell/php-ddd/compare/v1.0.2...v1.0.2) (2023-01-16)
+
+
+### Miscellaneous Chores
+
+* release 1.0.2 ([b025aca](https://github.com/geekcell/php-ddd/commit/b025aca317fadde2b2e354f9ee51ecafb8005054))
+
 ## [1.0.2](https://github.com/geekcell/php-ddd/compare/v1.0.1...v1.0.2) (2023-01-16)
 
 
