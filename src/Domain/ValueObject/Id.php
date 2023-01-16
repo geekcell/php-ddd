@@ -19,7 +19,7 @@ abstract class Id extends ValueObject
      *
      * @param int $id
      */
-    public function __construct(int $id)
+    final public function __construct(int $id)
     {
         parent::__construct($id);
 

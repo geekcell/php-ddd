@@ -22,7 +22,7 @@ class Uuid extends ValueObject
      *
      * @param string $uuid
      */
-    public function __construct(string $uuid)
+    final public function __construct(string $uuid)
     {
         parent::__construct($uuid);
 
