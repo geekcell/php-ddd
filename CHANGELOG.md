@@ -28,6 +28,3 @@
 
 * Apply PHP CS fixer fixes. ([8072b49](https://github.com/geekcell/php-ddd/commit/8072b49e198368e514c30e496e073ba2ff82a808))
 * Apply PHP CS fixer fixes. ([8e8c960](https://github.com/geekcell/php-ddd/commit/8e8c9608e03c332d1a43d16c5908b582bcac2c84))
-* **main:** release 1.0.0 ([79da6c0](https://github.com/geekcell/php-ddd/commit/79da6c0de15d0ed172d30cc4f8a0af017d79ee58))
-* **main:** release 2.0.0 ([bebeabb](https://github.com/geekcell/php-ddd/commit/bebeabbc1a15f67238ed4e0ef4172f4d1343900c))
-* release 1.0.0 ([7f36115](https://github.com/geekcell/php-ddd/commit/7f3611586202087e6d8e8a4e516cc16bfd304cd4))
