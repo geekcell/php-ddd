@@ -13,8 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test subject.
- *
- * @package GeekCell\Ddd\Tests\Infrastructure
  */
 class InMemoryTestRepository extends InMemoryRepository
 {
