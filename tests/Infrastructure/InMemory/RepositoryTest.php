@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Test subject.
  */
-class InMemoryTestRepository extends InMemoryRepository
+class TestRepository extends InMemoryRepository
 {
     public function __construct()
     {
@@ -27,7 +27,7 @@ class InMemoryTestRepository extends InMemoryRepository
     }
 }
 
-class InMemoryRepositoryTest extends TestCase
+class RepositoryTest extends TestCase
 {
     /**
      * @var Counter[]
@@ -68,7 +68,7 @@ class InMemoryRepositoryTest extends TestCase
     public function testCollectAndCount(): void
     {
         // Given
-        $repository = new InMemoryTestRepository();
+        $repository = new TestRepository();
         $repository->setItems($this->items);
 
         // When
@@ -80,13 +80,13 @@ class InMemoryRepositoryTest extends TestCase
     }
 
     /**
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryRepository::paginate
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryRepository::count
+     * @covers \GeekCell\Ddd\Infrastructure\Repository::paginate
+     * @covers \GeekCell\Ddd\Infrastructure\Repository::count
      */
     public function testPaginateAndCount(): void
     {
         // Given
-        $repository = new InMemoryTestRepository();
+        $repository = new TestRepository();
         $repository->setItems($this->items);
 
         // When
@@ -100,7 +100,7 @@ class InMemoryRepositoryTest extends TestCase
     public function testGetIterator(): void
     {
         // Given
-        $repository = new InMemoryTestRepository();
+        $repository = new TestRepository();
         $repository->setItems($this->items);
         $collection = $repository->collect();
 
