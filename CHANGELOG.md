@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/geekcell/php-ddd/compare/v1.0.1...v1.0.2) (2023-01-16)
+
+
+### Bug Fixes
+
+* Rename class to match PSR-4 autoloading standards. ([6e8d82e](https://github.com/geekcell/php-ddd/commit/6e8d82ecc6be3df29eb65f2468e7d760c27ba0b9))
+
 ## [1.0.1](https://github.com/geekcell/php-ddd/compare/v1.0.0...v1.0.1) (2023-01-16)
 
 
