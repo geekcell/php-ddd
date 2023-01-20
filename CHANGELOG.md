@@ -15,11 +15,6 @@
 * Use `ForType` instead of `For` for attributes ([7dd103e](https://github.com/geekcell/php-ddd/commit/7dd103ea0f411a486a55881a9220b4cb186bf0f7))
 
 
-### Miscellaneous Chores
-
-* release 1.0.2 ([b025aca](https://github.com/geekcell/php-ddd/commit/b025aca317fadde2b2e354f9ee51ecafb8005054))
-* release 1.1.0 ([4417a31](https://github.com/geekcell/php-ddd/commit/4417a31d3ee51aab09e8140ac16e3ad98aa5f154))
-
 ## [1.0.2](https://github.com/geekcell/php-ddd/compare/v1.0.1...v1.0.2) (2023-01-16)
 
 
