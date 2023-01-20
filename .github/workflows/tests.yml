@@ -21,13 +21,11 @@ jobs:
               uses: actions/checkout@v3.3.0
 
             # Setup PHP
-            - name: Get PHP Version
-              run: |
-                echo "PHP_VERSION=$(cat composer.lock | jq -r '."platform-overrides".php')" >> $GITHUB_ENV
             - name: Setup PHP
               uses: shivammathur/setup-php@2.23.0
               with:
-                php-version: ${{ env.PHP_VERSION }}
+                php-version: '8.1'
+                coverage: xdebug
 
             # Install dependencies
             - name: Cache Composer dependencies
