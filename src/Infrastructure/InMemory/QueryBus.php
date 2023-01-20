@@ -7,7 +7,7 @@ namespace GeekCell\Ddd\Infrastructure\InMemory;
 use GeekCell\Ddd\Contracts\Application\Query;
 use GeekCell\Ddd\Contracts\Application\QueryBus as QueryBusInterface;
 use GeekCell\Ddd\Contracts\Application\QueryHandler;
-use GeekCell\Ddd\Support\Attributes\For\Query as ForQuery;
+use GeekCell\Ddd\Support\Attributes\ForType\Query as ForQuery;
 
 final class QueryBus extends AbstractBus implements QueryBusInterface
 {

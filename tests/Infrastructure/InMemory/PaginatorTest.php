@@ -90,6 +90,70 @@ class PaginatorTest extends TestCase
         $this->assertEquals(10, $result);
     }
 
+    public function testArrayAccess(): void
+    {
+        // Given
+        $items = [
+            new Counter(1),
+            new Counter(2),
+            new Counter(3),
+            new Counter(4),
+            new Counter(5),
+        ];
+
+        /** @var Mockery\MockInterface $collection */
+        $collection = Mockery::mock(Collection::class);
+        $collection
+            ->shouldReceive('getIterator')
+            ->andReturn(new ArrayIterator($items));
+        $collection
+            ->shouldReceive('count')
+            ->andReturn(count($items));
+
+        // When
+
+        /** @var Collection $collection */
+        $paginator = new InMemoryPaginator($collection, 2, 2);
+        $result1 = $paginator[0];
+        $result2 = $paginator[4];
+
+        // Then
+        $this->assertInstanceOf(Counter::class, $result1);
+        $this->assertEquals(3, $result1->getValue());
+        $this->assertNull($result2);
+    }
+
+    public function testArrayAccessWithInvalidOffset(): void
+    {
+        // Given
+        $items = [
+            new Counter(1),
+            new Counter(2),
+            new Counter(3),
+            new Counter(4),
+            new Counter(5),
+        ];
+
+        /** @var Mockery\MockInterface $collection */
+        $collection = Mockery::mock(Collection::class);
+        $collection
+            ->shouldReceive('getIterator')
+            ->andReturn(new ArrayIterator($items));
+        $collection
+            ->shouldReceive('count')
+            ->andReturn(count($items));
+
+        // When
+
+        /** @var Collection $collection */
+        $paginator = new InMemoryPaginator($collection, 2, 2);
+
+        // Then
+        $this->assertNull($paginator[-1]);
+        $this->assertNull($paginator[0.5]);
+        $this->assertNull($paginator['invalid']);
+    }
+
     /**
      * @covers \GeekCell\Ddd\Infrastructure\InMemoryPaginator::getIterator
      * @covers \GeekCell\Ddd\Infrastructure\InMemoryPaginator::count

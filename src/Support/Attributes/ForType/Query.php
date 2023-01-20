@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace GeekCell\Ddd\Support\Attributes\For;
+namespace GeekCell\Ddd\Support\Attributes\ForType;
 
 use Attribute;
-use GeekCell\Ddd\Contracts\Application\Command as CommandInterface;
+use GeekCell\Ddd\Contracts\Application\Query as QueryInterface;
 use GeekCell\Ddd\Support\Attributes\ForType;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Command extends ForType
+class Query extends ForType
 {
     protected function supports(): string
     {
-        return CommandInterface::class;
+        return QueryInterface::class;
     }
 }

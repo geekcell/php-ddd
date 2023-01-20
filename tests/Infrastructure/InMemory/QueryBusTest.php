@@ -7,7 +7,7 @@ namespace GeekCell\Ddd\Tests\Infrastructure\InMemory;
 use GeekCell\Ddd\Contracts\Application\Query;
 use GeekCell\Ddd\Contracts\Application\QueryHandler;
 use GeekCell\Ddd\Infrastructure\InMemory\QueryBus as InMemoryQueryBus;
-use GeekCell\Ddd\Support\Attributes\For;
+use GeekCell\Ddd\Support\Attributes\ForType;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,7 +27,7 @@ class UnknownQuery implements Query
 /**
  * Test fixture for InMemoryQueryBus.
  */
-#[For\Query(TestQuery::class)]
+#[ForType\Query(TestQuery::class)]
 class TestQueryHandler implements QueryHandler
 {
     public function execute(Query $query): mixed
@@ -39,7 +39,7 @@ class TestQueryHandler implements QueryHandler
 /**
  * Test fixture for InMemoryQueryBus.
  */
-#[For\Query(TestQuery::class, 'handle')]
+#[ForType\Query(TestQuery::class, 'handle')]
 class TestQueryHandlerWithExplicitHandleMethod implements QueryHandler
 {
     public function handle(TestQuery $query): mixed
@@ -62,7 +62,7 @@ class TestQueryHandlerWithoutAttributes implements QueryHandler
 /**
  * Test fixture for InMemoryCommandBus.
  */
-#[For\Query(TestQuery::class)]
+#[ForType\Query(TestQuery::class)]
 class TestQueryHandlerWithoutExecuteMethod implements QueryHandler
 {
 }
