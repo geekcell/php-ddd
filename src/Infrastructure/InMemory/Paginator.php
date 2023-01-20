@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace GeekCell\Ddd\Infrastructure\InMemory;
 
+use ArrayAccess;
 use EmptyIterator;
 use GeekCell\Ddd\Contracts\Domain\Paginator as PaginatorInterface;
 use GeekCell\Ddd\Domain\Collection;
 use LimitIterator;
 use Traversable;
 
-class Paginator implements PaginatorInterface
+class Paginator implements PaginatorInterface, ArrayAccess
 {
     public function __construct(
         private readonly Collection $collection,
@@ -50,6 +51,57 @@ class Paginator implements PaginatorInterface
     public function getTotalItems(): int
     {
         return count($this->collection);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetExists(mixed $offset): bool
+    {
+        if (!is_int($offset)) {
+            return false;
+        }
+
+        return $offset >= 0 && $offset < $this->count();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetGet(mixed $offset): mixed
+    {
+        if (!$this->offsetExists($offset)) {
+            return null;
+        }
+
+        $realOffset = $offset + $this->getCurrentPage();
+        foreach ($this->getIterator() as $index => $item) {
+            if ($index === $realOffset) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * This method is not supported since it is not appropriate for a paginator.
+     *
+     * @inheritDoc
+     */
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        // Unsupported since it is not appropriate for a paginator.
+    }
+
+    /**
+     * This method is not supported since it is not appropriate for a paginator.
+     *
+     * @inheritDoc
+     */
+    public function offsetUnset(mixed $offset): void
+    {
+        // Unsupported since it is not appropriate for a paginator.
     }
 
     /**
