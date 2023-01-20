@@ -7,7 +7,7 @@ namespace GeekCell\Ddd\Infrastructure\InMemory;
 use GeekCell\Ddd\Contracts\Application\Command;
 use GeekCell\Ddd\Contracts\Application\CommandBus as CommandBusInterface;
 use GeekCell\Ddd\Contracts\Application\CommandHandler;
-use GeekCell\Ddd\Support\Attributes\For\Command as ForCommand;
+use GeekCell\Ddd\Support\Attributes\ForType\Command as ForCommand;
 
 class CommandBus extends AbstractBus implements CommandBusInterface
 {

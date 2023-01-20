@@ -7,7 +7,7 @@ namespace GeekCell\Ddd\Tests\Infrastructure\InMemory;
 use GeekCell\Ddd\Contracts\Application\Command;
 use GeekCell\Ddd\Contracts\Application\CommandHandler;
 use GeekCell\Ddd\Infrastructure\InMemory\CommandBus as InMemoryCommandBus;
-use GeekCell\Ddd\Support\Attributes\For;
+use GeekCell\Ddd\Support\Attributes\ForType;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,7 +27,7 @@ class UnknownCommand implements Command
 /**
  * Test fixture for InMemoryCommandBus.
  */
-#[For\Command(TestCommand::class)]
+#[ForType\Command(TestCommand::class)]
 class TestCommandHandler implements CommandHandler
 {
     public function execute(Command $command): mixed
@@ -39,7 +39,7 @@ class TestCommandHandler implements CommandHandler
 /**
  * Test fixture for InMemoryCommandBus.
  */
-#[For\Command(TestCommand::class, 'handle')]
+#[ForType\Command(TestCommand::class, 'handle')]
 class TestCommandHandlerWithExplicitHandleMethod implements CommandHandler
 {
     public function handle(TestCommand $command): mixed
@@ -62,7 +62,7 @@ class TestCommandHandlerWithoutAttributes implements CommandHandler
 /**
  * Test fixture for InMemoryCommandBus.
  */
-#[For\Command(TestCommand::class)]
+#[ForType\Command(TestCommand::class)]
 class TestComamndHandlerWithoutExecuteMethod implements CommandHandler
 {
 }
