@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.0.2](https://github.com/geekcell/php-ddd/compare/v1.0.2...v1.0.2) (2023-01-20)
+
+
+### Features
+
+* Add `ChainRepository` to support multiple repositories. ([87deb1d](https://github.com/geekcell/php-ddd/commit/87deb1de1650d269b6f0472ea1e7ebd4535e5830))
+* Add more functionality to `Collection` class ([6e0c0a9](https://github.com/geekcell/php-ddd/commit/6e0c0a9796daa8f5513ce7b179f8b347cbd33c86))
+* Implement `ArrayAccess` for in-memory paginator. ([6abd60e](https://github.com/geekcell/php-ddd/commit/6abd60e099608b065002fe338b7faf3a9cf26104))
+
+
+### Bug Fixes
+
+* Use `ForType` instead of `For` for attributes ([7dd103e](https://github.com/geekcell/php-ddd/commit/7dd103ea0f411a486a55881a9220b4cb186bf0f7))
+
+
+### Miscellaneous Chores
+
+* release 1.0.2 ([b025aca](https://github.com/geekcell/php-ddd/commit/b025aca317fadde2b2e354f9ee51ecafb8005054))
+
 ## [1.0.2](https://github.com/geekcell/php-ddd/compare/v1.0.1...v1.0.2) (2023-01-16)
 
 
