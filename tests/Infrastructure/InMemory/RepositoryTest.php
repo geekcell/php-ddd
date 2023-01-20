@@ -61,10 +61,6 @@ class RepositoryTest extends TestCase
         };
     }
 
-    /**
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryRepository::collect
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryRepository::count
-     */
     public function testCollectAndCount(): void
     {
         // Given
@@ -79,10 +75,6 @@ class RepositoryTest extends TestCase
         $this->assertEquals(count($this->items), count($result));
     }
 
-    /**
-     * @covers \GeekCell\Ddd\Infrastructure\Repository::paginate
-     * @covers \GeekCell\Ddd\Infrastructure\Repository::count
-     */
     public function testPaginateAndCount(): void
     {
         // Given

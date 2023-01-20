@@ -154,10 +154,6 @@ class PaginatorTest extends TestCase
         $this->assertNull($paginator['invalid']);
     }
 
-    /**
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryPaginator::getIterator
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryPaginator::count
-     */
     public function testGetIteratorAndCount(): void
     {
         // Given
@@ -193,10 +189,6 @@ class PaginatorTest extends TestCase
         $this->assertEquals(2, count($paginator));
     }
 
-    /**
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryPaginator::getIterator
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryPaginator::count
-     */
     public function testGetIteratorWithEmptyCollection(): void
     {
         // Given
@@ -223,10 +215,6 @@ class PaginatorTest extends TestCase
         $this->assertEquals(0, count($paginator));
     }
 
-    /**
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryPaginator::getIterator
-     * @covers \GeekCell\Ddd\Infrastructure\InMemoryPaginator::count
-     */
     public function testGetIteratorWithCurrentPageTooHigh(): void
     {
         // Given
