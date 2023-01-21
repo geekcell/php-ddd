@@ -6,7 +6,7 @@ Your ultimate guard rails for domain driven design with PHP.
 
 ## Installation
 
-To use this bundle, require it in Composer
+To use this package, require it in Composer
 
 ```bash
 composer require geekcell/ddd
