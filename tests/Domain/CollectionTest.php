@@ -166,6 +166,21 @@ class CollectionTest extends TestCase
         $this->assertNotSame($collection, $newCollection);
     }
 
+    public function testFilterWithAdjustedIndices(): void
+    {
+        // Given
+        $items = [1, 2, 3, 4];
+        $collection = new Collection($items);
+
+        // When
+        $newCollection = $collection->filter(fn (int $i) => $i % 2 === 0);
+
+        // Then
+        $this->assertCount(2, $newCollection);
+        $this->assertEquals(2, $newCollection[0]);
+        $this->assertEquals(4, $newCollection[1]);
+    }
+
     public function testMap(): void
     {
         // Given
