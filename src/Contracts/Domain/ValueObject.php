@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace GeekCell\Ddd\Contracts\Domain;
 
-interface ValueObject
+use Stringable;
+
+interface ValueObject extends Stringable
 {
     /**
      * Check if the given object is equal to the current object.
@@ -20,11 +22,4 @@ interface ValueObject
      * @return mixed
      */
     public function getValue(): mixed;
-
-    /**
-     * Return the string representation of the value object.
-     *
-     * @return string
-     */
-    public function __toString(): string;
 }
