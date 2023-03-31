@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/geekcell/php-ddd/compare/v1.1.0...v1.1.1) (2023-03-31)
+
+
+### Bug Fixes
+
+* Improve `Collection::filter` method to not retain indices. ([#13](https://github.com/geekcell/php-ddd/issues/13)) ([1848c02](https://github.com/geekcell/php-ddd/commit/1848c020ca062573b5b88a235ec9c304d110445f)), closes [#12](https://github.com/geekcell/php-ddd/issues/12)
+
 ## [1.1.0](https://github.com/geekcell/php-ddd/compare/v1.0.2...v1.1.0) (2023-01-20)
 
 
