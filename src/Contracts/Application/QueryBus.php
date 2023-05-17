@@ -9,8 +9,9 @@ interface QueryBus
     /**
      * Dispatch a query to the appropriate handler.
      *
-     * @param Query $query
-     * @return mixed
+     * @template T of mixed
+     * @param Query<T> $query
+     * @return T
      */
     public function dispatch(Query $query): mixed;
 }

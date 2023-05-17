@@ -9,8 +9,9 @@ interface CommandBus
     /**
      * Dispatch a command to the appropriate handler.
      *
-     * @param Command $command
-     * @return mixed
+     * @template T of mixed
+     * @param Command<T> $command
+     * @return T
      */
     public function dispatch(Command $command): mixed;
 }
