@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/geekcell/php-ddd/compare/v1.1.1...v1.2.0) (2023-05-22)
+
+
+### Features
+
+* add generic/template support for queries/commands ([5d2e689](https://github.com/geekcell/php-ddd/commit/5d2e689a0c5b233a97bbef57f3148c5cf0b151e0))
+* add generic/template support for queries/commands ([6d25a9c](https://github.com/geekcell/php-ddd/commit/6d25a9c346597ccb8a5bff49e90a682d605d6ec6))
+
 ## [1.1.1](https://github.com/geekcell/php-ddd/compare/v1.1.0...v1.1.1) (2023-03-31)
 
 
