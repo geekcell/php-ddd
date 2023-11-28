@@ -55,7 +55,7 @@ class Uuid extends ValueObject
     /**
      * @inheritDoc
      */
-    public function getValue(): mixed
+    public function getValue(): string
     {
         return $this->uuid;
     }

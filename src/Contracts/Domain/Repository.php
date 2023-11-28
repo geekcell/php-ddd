@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace GeekCell\Ddd\Contracts\Domain;
 
-use Countable;
 use GeekCell\Ddd\Domain\Collection;
-use IteratorAggregate;
 
-interface Repository extends Countable, IteratorAggregate
+/**
+ * @template T of object
+ * @extends \IteratorAggregate<T>
+ */
+interface Repository extends \Countable, \IteratorAggregate
 {
     /**
      * Returns a collection of items.
      *
-     * @return Collection
+     * @return Collection<T>
      */
     public function collect(): Collection;
 
@@ -23,7 +25,7 @@ interface Repository extends Countable, IteratorAggregate
      * @param int $itemsPerPage
      * @param int $currentPage
      *
-     * @return Paginator
+     * @return Paginator<T>
      */
     public function paginate(
         int $itemsPerPage,

@@ -11,6 +11,10 @@ use GeekCell\Ddd\Domain\Collection;
 use GeekCell\Ddd\Infrastructure\InMemory\Paginator as InMemoryPaginator;
 use Traversable;
 
+/**
+ * @template T of object
+ * @extends RepositoryInterface<T>
+ */
 abstract class Repository implements RepositoryInterface
 {
     /**
@@ -19,9 +23,6 @@ abstract class Repository implements RepositoryInterface
     protected array $items = [];
 
     /**
-     * @template T of object
-     * @extends IteratorAggregate<T>
-     *
      * @param class-string<T> $itemType
      */
     public function __construct(
