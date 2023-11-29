@@ -18,17 +18,15 @@ use Traversable;
 abstract class Repository implements RepositoryInterface
 {
     /**
-     * @var T[]
-     */
-    protected array $items = [];
-
-    /**
      * @param class-string<T> $itemType
+     * @param T[] $items
      */
     public function __construct(
         private string $itemType,
+        protected array $items = []
     ) {
         Assert::that($this->itemType)->classExists();
+        Assert::thatAll($this->items)->isInstanceOf($this->itemType);
     }
 
     /**
