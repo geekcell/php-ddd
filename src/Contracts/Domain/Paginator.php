@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace GeekCell\Ddd\Contracts\Domain;
 
-use Countable;
-use IteratorAggregate;
-
-interface Paginator extends Countable, IteratorAggregate
+/**
+ * @template T of object
+ * @extends \IteratorAggregate<T>
+ */
+interface Paginator extends \Countable, \IteratorAggregate
 {
     /**
      * Returns the current page.

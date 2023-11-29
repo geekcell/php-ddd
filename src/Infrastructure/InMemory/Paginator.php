@@ -11,8 +11,17 @@ use GeekCell\Ddd\Domain\Collection;
 use LimitIterator;
 use Traversable;
 
+/**
+ * @template T of object
+ * @extends PaginatorInterface<T>
+ */
 class Paginator implements PaginatorInterface, ArrayAccess
 {
+    /**
+     * @param Collection<T> $collection
+     * @param int $itemsPerPage
+     * @param int $currentPage
+     */
     public function __construct(
         private readonly Collection $collection,
         private int $itemsPerPage,

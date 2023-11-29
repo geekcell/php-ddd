@@ -6,14 +6,15 @@ namespace GeekCell\Ddd\Domain;
 
 use Assert;
 
+/**
+ * @template T of object
+ * @extends \IteratorAggregate<T>
+ */
 class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
-     * @template T of object
-     * @extends \IteratorAggregate<T>
-     *
      * @param T[] $items
-     * @param class-string<T> $itemType
+     * @param class-string<T>|null $itemType
      *
      * @throws Assert\AssertionFailedException
      */

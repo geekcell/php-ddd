@@ -29,7 +29,7 @@ abstract class Id extends ValueObject
     /**
      * @inheritDoc
      */
-    public function getValue(): mixed
+    public function getValue(): int
     {
         return $this->id;
     }
