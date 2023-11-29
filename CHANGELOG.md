@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/geekcell/php-ddd/compare/v1.2.0...v1.3.0) (2023-11-29)
+
+
+### Features
+
+* accept items in constructor arguments for in memory repository ([687479e](https://github.com/geekcell/php-ddd/commit/687479ec264bc0255aa5300782318af4baa1572c))
+
 ## [1.2.0](https://github.com/geekcell/php-ddd/compare/v1.1.1...v1.2.0) (2023-05-22)
 
 
