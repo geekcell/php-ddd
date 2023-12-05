@@ -13,7 +13,7 @@ use Traversable;
 
 /**
  * @template T of object
- * @extends RepositoryInterface<T>
+ * @implements RepositoryInterface<T>
  */
 abstract class Repository implements RepositoryInterface
 {
