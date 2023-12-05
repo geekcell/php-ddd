@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/geekcell/php-ddd/compare/v1.3.0...v1.3.1) (2023-12-05)
+
+
+### Bug Fixes
+
+* phpdoc: let InMemoryRepository implement interface instead of extending it ([ef575a5](https://github.com/geekcell/php-ddd/commit/ef575a50947025ca8e15c303eaa9148645408272))
+
 ## [1.3.0](https://github.com/geekcell/php-ddd/compare/v1.2.0...v1.3.0) (2023-11-29)
 
 
