@@ -13,7 +13,8 @@ use Traversable;
 
 /**
  * @template T of object
- * @extends PaginatorInterface<T>
+ * @implements PaginatorInterface<T>
+ * @implements ArrayAccess<mixed, T>
  */
 class Paginator implements PaginatorInterface, ArrayAccess
 {

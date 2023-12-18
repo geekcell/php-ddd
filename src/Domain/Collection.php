@@ -8,15 +8,14 @@ use Assert;
 
 /**
  * @template T of object
- * @extends \IteratorAggregate<T>
+ * @implements \IteratorAggregate<T>
+ * @implements \ArrayAccess<mixed, T>
  */
 class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
      * @param T[] $items
      * @param class-string<T>|null $itemType
-     *
-     * @throws Assert\AssertionFailedException
      */
     final public function __construct(
         private readonly array $items = [],
@@ -31,10 +30,8 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      * Add one or more items to the collection. It **does not** modify the
      * current collection, but returns a new one.
      *
-     * @param mixed $item  One or more items to add to the collection.
+     * @param mixed $item One or more items to add to the collection.
      * @return static
-     *
-     * @throws Assert\AssertionFailedException
      */
     public function add(mixed $item): static
     {
