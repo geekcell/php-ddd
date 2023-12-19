@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/geekcell/php-ddd/compare/v1.3.1...v1.4.0) (2023-12-19)
+
+
+### Features
+
+* annotate generic ArrayAccess implementation, fix generic IteratorAggregate implementation annotation ([d654dbe](https://github.com/geekcell/php-ddd/commit/d654dbedb44ed2760ccaf6659c10c5e95ce2263b))
+
 ## [1.3.1](https://github.com/geekcell/php-ddd/compare/v1.3.0...v1.3.1) (2023-12-05)
 
 
