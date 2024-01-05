@@ -526,4 +526,16 @@ class CollectionTest extends TestCase
         $collection = new Collection($items);
         $this->assertSame(-1, $collection->lastOr(static fn ($item) => $item > 10, -1));
     }
+
+    public function testIsEmpty(): void
+    {
+        $this->assertFalse((new Collection([1]))->isEmpty());
+        $this->assertTrue((new Collection([]))->isEmpty());
+    }
+
+    public function testHasItems(): void
+    {
+        $this->assertFalse((new Collection([]))->hasItems());
+        $this->assertTrue((new Collection([1]))->hasItems());
+    }
 }

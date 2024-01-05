@@ -232,6 +232,22 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
+     * Returns whether the collection is empty (has no items)
+     */
+    public function isEmpty(): bool
+    {
+        return $this->items === [];
+    }
+
+    /**
+     * Returns whether the collection has items
+     */
+    public function hasItems(): bool
+    {
+        return $this->items !== [];
+    }
+
+    /**
      * Add one or more items to the collection. It **does not** modify the
      * current collection, but returns a new one.
      *
