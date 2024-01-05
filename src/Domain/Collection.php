@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace GeekCell\Ddd\Domain;
 
 use Assert;
+use InvalidArgumentException;
+use Traversable;
 
 /**
  * @template T of object
@@ -27,10 +29,31 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
+     * Creates a collection from a given iterable of items.
+     * This function is useful when trying to create a collection from a generator or an iterator
+     *
+     * @param iterable<T> $items
+     * @param class-string<T>|null $itemType
+     * @return self<T>
+     */
+    public static function fromIterable(iterable $items, ?string $itemType = null): static
+    {
+        if (is_array($items)) {
+            return new static($items, $itemType);
+        }
+
+        if (!$items instanceof Traversable) {
+            $items = [...$items];
+        }
+
+        return new static(iterator_to_array($items), $itemType);
+    }
+
+    /**
      * Add one or more items to the collection. It **does not** modify the
      * current collection, but returns a new one.
      *
-     * @param mixed $item One or more items to add to the collection.
+     * @param T|iterable<T> $item One or more items to add to the collection.
      * @return static
      */
     public function add(mixed $item): static
@@ -158,7 +181,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritDoc
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->items);
     }

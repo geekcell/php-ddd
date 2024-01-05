@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GeekCell\Ddd\Tests\Domain;
 
+use ArrayIterator;
 use Assert;
 use GeekCell\Ddd\Domain\Collection;
 use PHPUnit\Framework\TestCase;
@@ -299,5 +300,24 @@ class CollectionTest extends TestCase
 
         // Then
         $this->assertEquals(60, $result);
+    }
+
+    public function testFromIterable(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collectionFromArray = Collection::fromIterable($items);
+        $this->assertSame($items, iterator_to_array($collectionFromArray));
+
+        $collectionFromIterator = Collection::fromIterable(new ArrayIterator($items));
+        $this->assertSame($items, iterator_to_array($collectionFromIterator));
+
+        $generatorFn = static function () use ($items) {
+            foreach ($items as $item) {
+                yield $item;
+            }
+        };
+
+        $collectionFromGenerator = Collection::fromIterable($generatorFn());
+        $this->assertSame($items, iterator_to_array($collectionFromGenerator));
     }
 }
