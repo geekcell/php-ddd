@@ -30,7 +30,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * Creates a collection from a given iterable of items.
-     * This function is useful when trying to create a collection from a generator or an iterator
+     * This function is useful when trying to create a collection from a generator or an iterator.
      *
      * @param iterable<T> $items
      * @param class-string<T>|null $itemType
@@ -53,7 +53,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * Returns true if every value in the collection passes the callback truthy test. Opposite of self::none().
      * Callback arguments will be element, index, collection.
-     * Function short-circuits on first falsy return value
+     * Function short-circuits on first falsy return value.
      *
      * @param ?callable(T, int, static): bool $callback
      * @return bool
@@ -76,7 +76,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * Returns true if every value in the collection passes the callback falsy test. Opposite of self::every().
      * Callback arguments will be element, index, collection.
-     * Function short-circuits on first truthy return value
+     * Function short-circuits on first truthy return value.
      *
      * @param ?callable(T, int, static): bool $callback
      * @return bool
@@ -99,7 +99,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * Returns true if at least one value in the collection passes the callback truthy test.
      * Callback arguments will be element, index, collection.
-     * Function short-circuits on first truthy return value
+     * Function short-circuits on first truthy return value.
      *
      * @param ?callable(T, int, static): bool $callback
      * @return bool
@@ -117,6 +117,106 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         return false;
+    }
+
+    /**
+     * Returns the first element of the collection that matches the given callback.
+     * If no callback is given the first element in the collection is returned.
+     * Throws exception if collection is empty or the given callback was never satisfied.
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return T
+     * @throws InvalidArgumentException
+     */
+    public function first(callable $callback = null)
+    {
+        if ($this->items === []) {
+            throw new InvalidArgumentException('No items in collection');
+        }
+
+        foreach ($this->items as $index => $item) {
+            if ($callback === null || $callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        throw new InvalidArgumentException('No item found in collection that satisfies first callback');
+    }
+
+    /**
+     * Returns the first element of the collection that matches the given callback.
+     * If no callback is given the first element in the collection is returned.
+     * If the collection is empty the given fallback value is returned instead.
+     *
+     * @template U of T|mixed
+     * @param ?callable(T, int, static): bool $callback
+     * @param U $fallbackValue
+     * @return U
+     * @throws InvalidArgumentException
+     */
+    public function firstOr(callable $callback = null, mixed $fallbackValue = null)
+    {
+        if ($this->items === []) {
+            return $fallbackValue;
+        }
+
+        foreach ($this->items as $index => $item) {
+            if ($callback === null || $callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        return $fallbackValue;
+    }
+
+    /**
+     * Returns the last element of the collection that matches the given callback.
+     * If no callback is given the last element in the collection is returned.
+     * Throws exception if collection is empty or the given callback was never satisfied.
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return T
+     * @throws InvalidArgumentException
+     */
+    public function last(callable $callback = null)
+    {
+        if ($this->items === []) {
+            throw new InvalidArgumentException('No items in collection');
+        }
+
+        foreach (array_reverse($this->items) as $index => $item) {
+            if ($callback === null || $callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        throw new InvalidArgumentException('No item found in collection that satisfies last callback');
+    }
+
+    /**
+     * Returns the last element of the collection that matches the given callback.
+     * If no callback is given the last element in the collection is returned.
+     * If the collection is empty the given fallback value is returned instead.
+     *
+     * @template U of T|mixed
+     * @param ?callable(T, int, static): bool $callback
+     * @param U $fallbackValue
+     * @return U
+     * @throws InvalidArgumentException
+     */
+    public function lastOr(callable $callback = null, mixed $fallbackValue = null)
+    {
+        if ($this->items === []) {
+            return $fallbackValue;
+        }
+
+        foreach (array_reverse($this->items) as $index => $item) {
+            if ($callback === null || $callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        return $fallbackValue;
     }
 
     /**

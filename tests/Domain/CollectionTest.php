@@ -7,6 +7,7 @@ namespace GeekCell\Ddd\Tests\Domain;
 use ArrayIterator;
 use Assert;
 use GeekCell\Ddd\Domain\Collection;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -430,5 +431,99 @@ class CollectionTest extends TestCase
             $this->assertSame($c, $collection);
             return true;
         });
+    }
+
+    public function testFirst(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertSame(1, $collection->first());
+    }
+
+    public function testFirstThrowsExceptionOnEmptyCollection(): void
+    {
+        $collection = new Collection([]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No items in collection');
+        $collection->first();
+    }
+
+    public function testFirstThrowsExceptionIfCallbackIsNeverSatisfied(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No item found in collection that satisfies first callback');
+        $collection->first(static fn () => false);
+    }
+
+    public function testFirstOrReturnsFirstValueInCollectionIfNoCallbackIsGiven(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(1, $collection->firstOr());
+    }
+
+    public function testFirstOrReturnsFirstValueThatSatisfiesCallback(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(6, $collection->firstOr(static fn ($item) => $item > 5));
+    }
+
+    public function testFirstOrReturnsFallbackValueIfCallbackIsNeverSatisfied(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(-1, $collection->firstOr(static fn ($item) => $item > 10, -1));
+    }
+
+    public function testLast(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertSame(10, $collection->last());
+    }
+
+    public function testLastThrowsExceptionOnEmptyCollection(): void
+    {
+        $collection = new Collection([]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No items in collection');
+        $collection->last();
+    }
+
+    public function testLastThrowsExceptionIfCallbackIsNeverSatisfied(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No item found in collection that satisfies last callback');
+        $collection->last(static fn () => false);
+    }
+
+    public function testLastOrReturnsLastValueInCollectionIfNoCallbackIsGiven(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(10, $collection->lastOr());
+    }
+
+    public function testLastOrReturnsLastValueThatSatisfiesCallback(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(10, $collection->lastOr(static fn ($item) => $item > 5));
+    }
+
+    public function testLastOrReturnsFallbackValueIfCallbackIsNeverSatisfied(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(-1, $collection->lastOr(static fn ($item) => $item > 10, -1));
     }
 }
