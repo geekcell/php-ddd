@@ -4,16 +4,28 @@ declare(strict_types=1);
 
 namespace GeekCell\Ddd\Domain;
 
+use ArrayAccess;
+use ArrayIterator;
 use Assert;
+use Countable;
 use InvalidArgumentException;
+use IteratorAggregate;
 use Traversable;
+use function array_filter;
+use function array_map;
+use function array_reduce;
+use function array_values;
+use function count;
+use function get_class;
+use function is_int;
+use function reset;
 
 /**
  * @template T of object
- * @implements \IteratorAggregate<T>
- * @implements \ArrayAccess<mixed, T>
+ * @implements IteratorAggregate<T>
+ * @implements ArrayAccess<mixed, T>
  */
-class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
+class Collection implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * @param T[] $items
@@ -249,7 +261,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     public function filter(callable $callback): static
     {
         return new static(
-            \array_values(\array_filter($this->items, $callback)),
+            array_values(array_filter($this->items, $callback)),
             $this->itemType,
         );
     }
@@ -267,15 +279,15 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function map(callable $callback, bool $inferTypes = true): static
     {
-        $mapResult = \array_map($callback, $this->items);
-        $firstItem = \reset($mapResult);
+        $mapResult = array_map($callback, $this->items);
+        $firstItem = reset($mapResult);
 
         if ($firstItem === false || !is_object($firstItem)) {
             return new static($mapResult);
         }
 
         if ($inferTypes && $this->itemType !== null) {
-            return new static($mapResult, \get_class($firstItem));
+            return new static($mapResult, get_class($firstItem));
         }
 
         return new static($mapResult);
@@ -291,7 +303,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function reduce(callable $callback, mixed $initial = null): mixed
     {
-        return \array_reduce($this->items, $callback, $initial);
+        return array_reduce($this->items, $callback, $initial);
     }
 
     /**
@@ -299,7 +311,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetExists(mixed $offset): bool
     {
-        if (!\is_int($offset)) {
+        if (!is_int($offset)) {
             return false;
         }
 
@@ -345,7 +357,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function count(): int
     {
-        return \count($this->items);
+        return count($this->items);
     }
 
     /**
@@ -353,6 +365,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->items);
+        return new ArrayIterator($this->items);
     }
 }
