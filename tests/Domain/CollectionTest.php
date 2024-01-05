@@ -320,4 +320,115 @@ class CollectionTest extends TestCase
         $collectionFromGenerator = Collection::fromIterable($generatorFn());
         $this->assertSame($items, iterator_to_array($collectionFromGenerator));
     }
+
+    public function testEvery(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertFalse($collection->every(static fn ($item) => $item > 10));
+        $this->assertFalse($collection->every(static fn ($item) => $item > 5));
+        $this->assertTrue($collection->every(static fn ($item) => $item > 0));
+    }
+
+    public function testEveryWithoutArgumentDefaultsToTruthyCheck(): void
+    {
+        $this->assertTrue((new Collection([1, true]))->every());
+        $this->assertTrue((new Collection([1, true]))->every());
+        $this->assertFalse((new Collection([null, false]))->every());
+        $this->assertFalse((new Collection([false, null]))->every());
+        $this->assertFalse((new Collection([0, false]))->every());
+    }
+
+    public function testEveryReturnsTrueOnEmptyCollection(): void
+    {
+        $this->assertTrue((new Collection())->every(static fn ($item) => false));
+    }
+
+    public function testEveryShortCircuitsOnFirstFalsyValue(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $collection->every(function ($item, $index, $c) use ($collection): bool {
+            // First item already returns false therefore the index should never be something other than 0
+            $this->assertSame(0, $index);
+            $this->assertSame($c, $collection);
+            return false;
+        });
+    }
+
+    public function testNone(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertTrue($collection->none(static fn ($item) => $item > 10));
+        $this->assertFalse($collection->none(static fn ($item) => $item > 5));
+        $this->assertFalse($collection->none(static fn ($item) => $item > 0));
+    }
+
+    public function testNoneWithoutArgumentDefaultsToTruthyCheck(): void
+    {
+        $this->assertFalse((new Collection([1, true]))->none());
+        $this->assertFalse((new Collection([1, true]))->none());
+        $this->assertTrue((new Collection([null, false]))->none());
+        $this->assertTrue((new Collection([false, null]))->none());
+        $this->assertTrue((new Collection([0, false]))->none());
+    }
+
+    public function testNoneReturnsFalseOnEmptyCollection(): void
+    {
+        $this->assertTrue((new Collection())->none(static fn ($item) => true));
+    }
+
+    public function testNoneShortCircuitsOnFirstFalsyValue(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $collection->none(function ($item, $index, $c) use ($collection): bool {
+            // First item already returns true therefore the index should never be something other than 0
+            $this->assertSame(0, $index);
+            $this->assertSame($c, $collection);
+            return true;
+        });
+    }
+
+    public function testSome(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertFalse($collection->some(static fn ($item) => $item > 10));
+        $this->assertTrue($collection->some(static fn ($item) => $item > 5));
+        $this->assertTrue($collection->some(static fn ($item) => $item > 0));
+    }
+
+    public function testSomeWithoutArgumentDefaultsToTruthyCheck(): void
+    {
+        $this->assertTrue((new Collection([1, true]))->some());
+        $this->assertTrue((new Collection([1, true]))->some());
+        $this->assertFalse((new Collection([null, false]))->some());
+        $this->assertFalse((new Collection([false, null]))->some());
+        $this->assertFalse((new Collection([0, false]))->some());
+    }
+
+    public function testSomeReturnsFalseOnEmptyCollection(): void
+    {
+        $this->assertFalse((new Collection())->some(static fn ($item) => true));
+    }
+
+    public function testSomeShortCircuitsOnFirstFalsyValue(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $collection->some(function ($item, $index, $c) use ($collection): bool {
+            // First item already returns true therefore the index should never be something other than 0
+            $this->assertSame(0, $index);
+            $this->assertSame($c, $collection);
+            return true;
+        });
+    }
 }

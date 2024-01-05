@@ -35,6 +35,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param iterable<T> $items
      * @param class-string<T>|null $itemType
      * @return self<T>
+     * @throws Assert\AssertionFailedException
      */
     public static function fromIterable(iterable $items, ?string $itemType = null): static
     {
@@ -47,6 +48,75 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         return new static(iterator_to_array($items), $itemType);
+    }
+
+    /**
+     * Returns true if every value in the collection passes the callback truthy test. Opposite of self::none().
+     * Callback arguments will be element, index, collection.
+     * Function short-circuits on first falsy return value
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return bool
+     */
+    public function every(callable $callback = null): bool
+    {
+        if ($callback === null) {
+            $callback = static fn ($item, $index, $self) => $item;
+        }
+
+        foreach ($this->items as $index => $item) {
+            if (!$callback($item, $index, $this)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns true if every value in the collection passes the callback falsy test. Opposite of self::every().
+     * Callback arguments will be element, index, collection.
+     * Function short-circuits on first truthy return value
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return bool
+     */
+    public function none(callable $callback = null): bool
+    {
+        if ($callback === null) {
+            $callback = static fn ($item, $index, $self) => $item;
+        }
+
+        foreach ($this->items as $index => $item) {
+            if ($callback($item, $index, $this)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns true if at least one value in the collection passes the callback truthy test.
+     * Callback arguments will be element, index, collection.
+     * Function short-circuits on first truthy return value
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return bool
+     */
+    public function some(callable $callback = null): bool
+    {
+        if ($callback === null) {
+            $callback = static fn ($item, $index, $self) => $item;
+        }
+
+        foreach ($this->items as $index => $item) {
+            if ($callback($item, $index, $this)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
