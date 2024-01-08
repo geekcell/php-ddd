@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace GeekCell\Ddd\Tests\Domain;
 
+use ArrayIterator;
 use Assert;
 use GeekCell\Ddd\Domain\Collection;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -299,5 +301,241 @@ class CollectionTest extends TestCase
 
         // Then
         $this->assertEquals(60, $result);
+    }
+
+    public function testFromIterable(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collectionFromArray = Collection::fromIterable($items);
+        $this->assertSame($items, iterator_to_array($collectionFromArray));
+
+        $collectionFromIterator = Collection::fromIterable(new ArrayIterator($items));
+        $this->assertSame($items, iterator_to_array($collectionFromIterator));
+
+        $generatorFn = static function () use ($items) {
+            foreach ($items as $item) {
+                yield $item;
+            }
+        };
+
+        $collectionFromGenerator = Collection::fromIterable($generatorFn());
+        $this->assertSame($items, iterator_to_array($collectionFromGenerator));
+    }
+
+    public function testEvery(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertFalse($collection->every(static fn ($item) => $item > 10));
+        $this->assertFalse($collection->every(static fn ($item) => $item > 5));
+        $this->assertTrue($collection->every(static fn ($item) => $item > 0));
+    }
+
+    public function testEveryWithoutArgumentDefaultsToTruthyCheck(): void
+    {
+        $this->assertTrue((new Collection([1, true]))->every());
+        $this->assertTrue((new Collection([1, true]))->every());
+        $this->assertFalse((new Collection([null, false]))->every());
+        $this->assertFalse((new Collection([false, null]))->every());
+        $this->assertFalse((new Collection([0, false]))->every());
+    }
+
+    public function testEveryReturnsTrueOnEmptyCollection(): void
+    {
+        $this->assertTrue((new Collection())->every(static fn ($item) => false));
+    }
+
+    public function testEveryShortCircuitsOnFirstFalsyValue(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $collection->every(function ($item, $index, $c) use ($collection): bool {
+            // First item already returns false therefore the index should never be something other than 0
+            $this->assertSame(0, $index);
+            $this->assertSame($c, $collection);
+            return false;
+        });
+    }
+
+    public function testNone(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertTrue($collection->none(static fn ($item) => $item > 10));
+        $this->assertFalse($collection->none(static fn ($item) => $item > 5));
+        $this->assertFalse($collection->none(static fn ($item) => $item > 0));
+    }
+
+    public function testNoneWithoutArgumentDefaultsToTruthyCheck(): void
+    {
+        $this->assertFalse((new Collection([1, true]))->none());
+        $this->assertFalse((new Collection([1, true]))->none());
+        $this->assertTrue((new Collection([null, false]))->none());
+        $this->assertTrue((new Collection([false, null]))->none());
+        $this->assertTrue((new Collection([0, false]))->none());
+    }
+
+    public function testNoneReturnsFalseOnEmptyCollection(): void
+    {
+        $this->assertTrue((new Collection())->none(static fn ($item) => true));
+    }
+
+    public function testNoneShortCircuitsOnFirstFalsyValue(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $collection->none(function ($item, $index, $c) use ($collection): bool {
+            // First item already returns true therefore the index should never be something other than 0
+            $this->assertSame(0, $index);
+            $this->assertSame($c, $collection);
+            return true;
+        });
+    }
+
+    public function testSome(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertFalse($collection->some(static fn ($item) => $item > 10));
+        $this->assertTrue($collection->some(static fn ($item) => $item > 5));
+        $this->assertTrue($collection->some(static fn ($item) => $item > 0));
+    }
+
+    public function testSomeWithoutArgumentDefaultsToTruthyCheck(): void
+    {
+        $this->assertTrue((new Collection([1, true]))->some());
+        $this->assertTrue((new Collection([1, true]))->some());
+        $this->assertFalse((new Collection([null, false]))->some());
+        $this->assertFalse((new Collection([false, null]))->some());
+        $this->assertFalse((new Collection([0, false]))->some());
+    }
+
+    public function testSomeReturnsFalseOnEmptyCollection(): void
+    {
+        $this->assertFalse((new Collection())->some(static fn ($item) => true));
+    }
+
+    public function testSomeShortCircuitsOnFirstFalsyValue(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $collection->some(function ($item, $index, $c) use ($collection): bool {
+            // First item already returns true therefore the index should never be something other than 0
+            $this->assertSame(0, $index);
+            $this->assertSame($c, $collection);
+            return true;
+        });
+    }
+
+    public function testFirst(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertSame(1, $collection->first());
+    }
+
+    public function testFirstThrowsExceptionOnEmptyCollection(): void
+    {
+        $collection = new Collection([]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No items in collection');
+        $collection->first();
+    }
+
+    public function testFirstThrowsExceptionIfCallbackIsNeverSatisfied(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No item found in collection that satisfies first callback');
+        $collection->first(static fn () => false);
+    }
+
+    public function testFirstOrReturnsFirstValueInCollectionIfNoCallbackIsGiven(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(1, $collection->firstOr());
+    }
+
+    public function testFirstOrReturnsFirstValueThatSatisfiesCallback(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(6, $collection->firstOr(static fn ($item) => $item > 5));
+    }
+
+    public function testFirstOrReturnsFallbackValueIfCallbackIsNeverSatisfied(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(-1, $collection->firstOr(static fn ($item) => $item > 10, -1));
+    }
+
+    public function testLast(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertSame(10, $collection->last());
+    }
+
+    public function testLastThrowsExceptionOnEmptyCollection(): void
+    {
+        $collection = new Collection([]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No items in collection');
+        $collection->last();
+    }
+
+    public function testLastThrowsExceptionIfCallbackIsNeverSatisfied(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No item found in collection that satisfies last callback');
+        $collection->last(static fn () => false);
+    }
+
+    public function testLastOrReturnsLastValueInCollectionIfNoCallbackIsGiven(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(10, $collection->lastOr());
+    }
+
+    public function testLastOrReturnsLastValueThatSatisfiesCallback(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(10, $collection->lastOr(static fn ($item) => $item > 5));
+    }
+
+    public function testLastOrReturnsFallbackValueIfCallbackIsNeverSatisfied(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+        $this->assertSame(-1, $collection->lastOr(static fn ($item) => $item > 10, -1));
+    }
+
+    public function testIsEmpty(): void
+    {
+        $this->assertFalse((new Collection([1]))->isEmpty());
+        $this->assertTrue((new Collection([]))->isEmpty());
+    }
+
+    public function testHasItems(): void
+    {
+        $this->assertFalse((new Collection([]))->hasItems());
+        $this->assertTrue((new Collection([1]))->hasItems());
     }
 }

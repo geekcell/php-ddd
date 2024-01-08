@@ -4,14 +4,28 @@ declare(strict_types=1);
 
 namespace GeekCell\Ddd\Domain;
 
+use ArrayAccess;
+use ArrayIterator;
 use Assert;
+use Countable;
+use InvalidArgumentException;
+use IteratorAggregate;
+use Traversable;
+use function array_filter;
+use function array_map;
+use function array_reduce;
+use function array_values;
+use function count;
+use function get_class;
+use function is_int;
+use function reset;
 
 /**
  * @template T of object
- * @implements \IteratorAggregate<T>
- * @implements \ArrayAccess<mixed, T>
+ * @implements IteratorAggregate<T>
+ * @implements ArrayAccess<mixed, T>
  */
-class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
+class Collection implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * @param T[] $items
@@ -27,10 +41,217 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
+     * Creates a collection from a given iterable of items.
+     * This function is useful when trying to create a collection from a generator or an iterator.
+     *
+     * @param iterable<T> $items
+     * @param class-string<T>|null $itemType
+     * @return self<T>
+     * @throws Assert\AssertionFailedException
+     */
+    public static function fromIterable(iterable $items, ?string $itemType = null): static
+    {
+        if (is_array($items)) {
+            return new static($items, $itemType);
+        }
+
+        if (!$items instanceof Traversable) {
+            $items = [...$items];
+        }
+
+        return new static(iterator_to_array($items), $itemType);
+    }
+
+    /**
+     * Returns true if every value in the collection passes the callback truthy test. Opposite of self::none().
+     * Callback arguments will be element, index, collection.
+     * Function short-circuits on first falsy return value.
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return bool
+     */
+    public function every(callable $callback = null): bool
+    {
+        if ($callback === null) {
+            $callback = static fn ($item, $index, $self) => $item;
+        }
+
+        foreach ($this->items as $index => $item) {
+            if (!$callback($item, $index, $this)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns true if every value in the collection passes the callback falsy test. Opposite of self::every().
+     * Callback arguments will be element, index, collection.
+     * Function short-circuits on first truthy return value.
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return bool
+     */
+    public function none(callable $callback = null): bool
+    {
+        if ($callback === null) {
+            $callback = static fn ($item, $index, $self) => $item;
+        }
+
+        foreach ($this->items as $index => $item) {
+            if ($callback($item, $index, $this)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns true if at least one value in the collection passes the callback truthy test.
+     * Callback arguments will be element, index, collection.
+     * Function short-circuits on first truthy return value.
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return bool
+     */
+    public function some(callable $callback = null): bool
+    {
+        if ($callback === null) {
+            $callback = static fn ($item, $index, $self) => $item;
+        }
+
+        foreach ($this->items as $index => $item) {
+            if ($callback($item, $index, $this)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the first element of the collection that matches the given callback.
+     * If no callback is given the first element in the collection is returned.
+     * Throws exception if collection is empty or the given callback was never satisfied.
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return T
+     * @throws InvalidArgumentException
+     */
+    public function first(callable $callback = null)
+    {
+        if ($this->items === []) {
+            throw new InvalidArgumentException('No items in collection');
+        }
+
+        foreach ($this->items as $index => $item) {
+            if ($callback === null || $callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        throw new InvalidArgumentException('No item found in collection that satisfies first callback');
+    }
+
+    /**
+     * Returns the first element of the collection that matches the given callback.
+     * If no callback is given the first element in the collection is returned.
+     * If the collection is empty the given fallback value is returned instead.
+     *
+     * @template U of T|mixed
+     * @param ?callable(T, int, static): bool $callback
+     * @param U $fallbackValue
+     * @return U
+     * @throws InvalidArgumentException
+     */
+    public function firstOr(callable $callback = null, mixed $fallbackValue = null)
+    {
+        if ($this->items === []) {
+            return $fallbackValue;
+        }
+
+        foreach ($this->items as $index => $item) {
+            if ($callback === null || $callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        return $fallbackValue;
+    }
+
+    /**
+     * Returns the last element of the collection that matches the given callback.
+     * If no callback is given the last element in the collection is returned.
+     * Throws exception if collection is empty or the given callback was never satisfied.
+     *
+     * @param ?callable(T, int, static): bool $callback
+     * @return T
+     * @throws InvalidArgumentException
+     */
+    public function last(callable $callback = null)
+    {
+        if ($this->items === []) {
+            throw new InvalidArgumentException('No items in collection');
+        }
+
+        foreach (array_reverse($this->items) as $index => $item) {
+            if ($callback === null || $callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        throw new InvalidArgumentException('No item found in collection that satisfies last callback');
+    }
+
+    /**
+     * Returns the last element of the collection that matches the given callback.
+     * If no callback is given the last element in the collection is returned.
+     * If the collection is empty the given fallback value is returned instead.
+     *
+     * @template U of T|mixed
+     * @param ?callable(T, int, static): bool $callback
+     * @param U $fallbackValue
+     * @return U
+     * @throws InvalidArgumentException
+     */
+    public function lastOr(callable $callback = null, mixed $fallbackValue = null)
+    {
+        if ($this->items === []) {
+            return $fallbackValue;
+        }
+
+        foreach (array_reverse($this->items) as $index => $item) {
+            if ($callback === null || $callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        return $fallbackValue;
+    }
+
+    /**
+     * Returns whether the collection is empty (has no items)
+     */
+    public function isEmpty(): bool
+    {
+        return $this->items === [];
+    }
+
+    /**
+     * Returns whether the collection has items
+     */
+    public function hasItems(): bool
+    {
+        return $this->items !== [];
+    }
+
+    /**
      * Add one or more items to the collection. It **does not** modify the
      * current collection, but returns a new one.
      *
-     * @param mixed $item One or more items to add to the collection.
+     * @param T|iterable<T> $item One or more items to add to the collection.
      * @return static
      */
     public function add(mixed $item): static
@@ -56,7 +277,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     public function filter(callable $callback): static
     {
         return new static(
-            \array_values(\array_filter($this->items, $callback)),
+            array_values(array_filter($this->items, $callback)),
             $this->itemType,
         );
     }
@@ -74,15 +295,15 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function map(callable $callback, bool $inferTypes = true): static
     {
-        $mapResult = \array_map($callback, $this->items);
-        $firstItem = \reset($mapResult);
+        $mapResult = array_map($callback, $this->items);
+        $firstItem = reset($mapResult);
 
         if ($firstItem === false || !is_object($firstItem)) {
             return new static($mapResult);
         }
 
         if ($inferTypes && $this->itemType !== null) {
-            return new static($mapResult, \get_class($firstItem));
+            return new static($mapResult, get_class($firstItem));
         }
 
         return new static($mapResult);
@@ -98,7 +319,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function reduce(callable $callback, mixed $initial = null): mixed
     {
-        return \array_reduce($this->items, $callback, $initial);
+        return array_reduce($this->items, $callback, $initial);
     }
 
     /**
@@ -106,7 +327,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetExists(mixed $offset): bool
     {
-        if (!\is_int($offset)) {
+        if (!is_int($offset)) {
             return false;
         }
 
@@ -152,14 +373,14 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function count(): int
     {
-        return \count($this->items);
+        return count($this->items);
     }
 
     /**
      * @inheritDoc
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->items);
+        return new ArrayIterator($this->items);
     }
 }

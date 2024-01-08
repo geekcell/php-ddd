@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.5.0](https://github.com/geekcell/php-ddd/compare/v1.4.0...v1.5.0) (2024-01-05)
+
+### Features
+
+Added a couple of functions to the [Collection](./src/Domain/Collection.php) class to enable a smoother developer experience when trying use it in a more functional style
+
+The following functions were added:
+* `fromIterable` - enables users of the collection to construction the collection from an iterable value like iterators, generators, etc.
+* `every` - Returns true if given callback returns truthy values for all items
+* `none` - Returns true if given callback returns falsy values for all items
+* `some` - Returns true if given callback returns truthy values on some items
+* `first` - Get the first element of the collection that matches a callback, if given. Throws exception if collection is empty or predicate is never satisfied
+* `firstOr` - Same as first but returns $fallbackValue if collection is empty or predicate is never satisfied
+* `last` - Get the last element of the collection that matches a callback, if given. Throws exception if collection is empty or predicate is never satisfied
+* `lastOr` - Same as last but returns $fallbackValue if collection is empty or predicate is never satisfied
+* `isEmpty` - Returns whether the collection is empty
+* `hasItems` - Returns whether the collection has items
+
 ## [1.4.0](https://github.com/geekcell/php-ddd/compare/v1.3.1...v1.4.0) (2023-12-19)
 
 
