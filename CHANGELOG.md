@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.0](https://github.com/geekcell/php-ddd/compare/v1.4.0...v1.5.0) (2024-01-08)
+
+
+### Features
+
+* add every, none and some functions to collection ([cb1fe18](https://github.com/geekcell/php-ddd/commit/cb1fe18f87d383fa9ba3b457810bfb410319d815))
+* add first, firstOr, last, lastOr functions to collection ([74ce180](https://github.com/geekcell/php-ddd/commit/74ce180a23efc4989d5b019191b241a4bdbf4174))
+* add fromIterable function for Collection ([1f7d851](https://github.com/geekcell/php-ddd/commit/1f7d851738feb847f275f0780a6aca16ff868cd7))
+* add isEmpty and hasItems to collection ([1d6b0b8](https://github.com/geekcell/php-ddd/commit/1d6b0b823d8fddd4a3e53137225cf55b11a75c1f))
+
 ## [1.5.0](https://github.com/geekcell/php-ddd/compare/v1.4.0...v1.5.0) (2024-01-05)
 
 ### Features
