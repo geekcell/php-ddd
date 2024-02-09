@@ -23,13 +23,14 @@ use function reset;
 /**
  * @template T of object
  * @implements IteratorAggregate<T>
- * @implements ArrayAccess<mixed, T>
+ * @implements ArrayAccess<array-key, T>
  */
 class Collection implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * @param T[] $items
      * @param class-string<T>|null $itemType
+     * @throws Assert\AssertionFailedException
      */
     final public function __construct(
         private readonly array $items = [],
@@ -129,6 +130,42 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
         }
 
         return false;
+    }
+
+    /**
+     * Returns the first element of the collection that matches the given callback or null if the collection is empty
+     * or the callback never returned true for any item
+     *
+     * @param callable(T, int, static): bool $callback
+     * @return ?T
+     */
+    public function find(callable $callback)
+    {
+        foreach ($this->items as $index => $item) {
+            if ($callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the last element of the collection that matches the given callback or null if the collection is empty
+     * or the callback never returned true for any item
+     *
+     * @param callable(T, int, static): bool $callback
+     * @return ?T
+     */
+    public function findLast(callable $callback)
+    {
+        foreach (array_reverse($this->items) as $index => $item) {
+            if ($callback($item, $index, $this)) {
+                return $item;
+            }
+        }
+
+        return null;
     }
 
     /**

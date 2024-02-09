@@ -433,6 +433,52 @@ class CollectionTest extends TestCase
         });
     }
 
+    public function testFind(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertSame(3, $collection->find(static fn ($item) => $item > 2));
+    }
+
+    public function testFindReturnsNullIfCallbackNeverReturnsTrue(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertSame(null, $collection->find(static fn () => false));
+    }
+
+    public function testFindReturnsNullOnEmptyCollection(): void
+    {
+        $collection = new Collection([]);
+
+        $this->assertSame(null, $collection->find(static fn () => true));
+    }
+
+    public function testFindLast(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertSame(10, $collection->findLast(static fn ($item) => $item > 2));
+    }
+
+    public function testFindLastReturnsNullIfCallbackNeverReturnsTrue(): void
+    {
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $collection = new Collection($items);
+
+        $this->assertSame(null, $collection->findLast(static fn () => false));
+    }
+
+    public function testFindLastReturnsNullOnEmptyCollection(): void
+    {
+        $collection = new Collection([]);
+
+        $this->assertSame(null, $collection->find(static fn () => true));
+    }
+
     public function testFirst(): void
     {
         $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -477,7 +523,7 @@ class CollectionTest extends TestCase
     {
         $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         $collection = new Collection($items);
-        $this->assertSame(-1, $collection->firstOr(static fn ($item) => $item > 10, -1));
+        $this->assertSame(-1, $collection->firstOr(static fn () => false, -1));
     }
 
     public function testLast(): void
@@ -524,7 +570,7 @@ class CollectionTest extends TestCase
     {
         $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         $collection = new Collection($items);
-        $this->assertSame(-1, $collection->lastOr(static fn ($item) => $item > 10, -1));
+        $this->assertSame(-1, $collection->lastOr(static fn () => false, -1));
     }
 
     public function testIsEmpty(): void
