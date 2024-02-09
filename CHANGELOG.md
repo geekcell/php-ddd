@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/geekcell/php-ddd/compare/v1.5.0...v1.6.0) (2024-02-09)
+
+
+### Features
+
+* add find and findLast functions ([08588d2](https://github.com/geekcell/php-ddd/commit/08588d2ec3a95aa6d9436f382eedf610c035ec0f))
+
+
+### Bug Fixes
+
+* Add T as a possible return type for lastOr and firstOr ([b60ea9c](https://github.com/geekcell/php-ddd/commit/b60ea9c3985620b11960902b65dad114d95ea0e4))
+
 ## [1.5.0](https://github.com/geekcell/php-ddd/compare/v1.4.0...v1.5.0) (2024-01-08)
 
 
