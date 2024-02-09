@@ -200,7 +200,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      * @template U of T|mixed
      * @param ?callable(T, int, static): bool $callback
      * @param U $fallbackValue
-     * @return U
+     * @return U|T
      * @throws InvalidArgumentException
      */
     public function firstOr(callable $callback = null, mixed $fallbackValue = null)
@@ -250,7 +250,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      * @template U of T|mixed
      * @param ?callable(T, int, static): bool $callback
      * @param U $fallbackValue
-     * @return U
+     * @return U|T
      * @throws InvalidArgumentException
      */
     public function lastOr(callable $callback = null, mixed $fallbackValue = null)
