@@ -156,7 +156,7 @@ class CollectionTest extends TestCase
     public function testFilter(): void
     {
         // Given
-        $items = [1, 2, 3,4, 5, 6, 7, 8, 9, 10];
+        $items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         $collection = new Collection($items);
 
         // When
@@ -583,5 +583,33 @@ class CollectionTest extends TestCase
     {
         $this->assertFalse((new Collection([]))->hasItems());
         $this->assertTrue((new Collection([1]))->hasItems());
+    }
+
+    public function testToArray(): void
+    {
+        $this->assertSame([], (new Collection([]))->toArray());
+
+        $list = [1, 2, 3];
+        $this->assertSame($list, (new Collection($list))->toArray());
+
+        $keyValue = ['foo' => 1, 'bar' => 2, 'baz' => 3];
+        $this->assertSame($keyValue, (new Collection($keyValue))->toArray());
+
+        $numberIndexed = [1 => 1, 2 => 2, 3 => 3, 0 => 0];
+        $this->assertSame($numberIndexed, (new Collection($numberIndexed))->toArray());
+    }
+
+    public function testToList(): void
+    {
+        $this->assertSame([], (new Collection([]))->toList());
+
+        $list = [1, 2, 3];
+        $this->assertSame($list, (new Collection($list))->toList());
+
+        $keyValue = ['foo' => 1, 'bar' => 2, 'baz' => 3];
+        $this->assertSame([1, 2, 3], (new Collection($keyValue))->toList());
+
+        $numberIndexed = [1 => 1, 2 => 2, 3 => 3, 0 => 0];
+        $this->assertSame([1, 2, 3, 0], (new Collection($numberIndexed))->toList());
     }
 }
