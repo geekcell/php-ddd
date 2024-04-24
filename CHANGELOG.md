@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.0](https://github.com/geekcell/php-ddd/compare/v1.5.0...v1.6.0) (2024-04-24)
+
+
+### Features
+
+* add find and findLast functions ([08588d2](https://github.com/geekcell/php-ddd/commit/08588d2ec3a95aa6d9436f382eedf610c035ec0f))
+* add toList and toArray functions to Collection ([c883b50](https://github.com/geekcell/php-ddd/commit/c883b503c193042f7beb7df20a7ed7e964dd3d6f))
+
+
+### Bug Fixes
+
+* Add T as a possible return type for lastOr and firstOr ([b60ea9c](https://github.com/geekcell/php-ddd/commit/b60ea9c3985620b11960902b65dad114d95ea0e4))
+
 ## [1.5.0](https://github.com/geekcell/php-ddd/compare/v1.4.0...v1.5.0) (2024-01-08)
 
 
