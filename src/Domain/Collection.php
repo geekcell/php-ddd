@@ -11,6 +11,7 @@ use Countable;
 use InvalidArgumentException;
 use IteratorAggregate;
 use Traversable;
+
 use function array_filter;
 use function array_map;
 use function array_reduce;
@@ -28,7 +29,7 @@ use function reset;
 class Collection implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
-     * @param T[] $items
+     * @param array<array-key, T> $items
      * @param class-string<T>|null $itemType
      * @throws Assert\AssertionFailedException
      */
@@ -61,6 +62,27 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
         }
 
         return new static(iterator_to_array($items), $itemType);
+    }
+
+    /**
+     * Returns the collection as an array.
+     * The returned array is either a key-value array with values of type T or a list of T
+     *
+     * @return array<array-key, T>|list<T>
+     */
+    public function toArray(): array
+    {
+        return $this->items;
+    }
+
+    /**
+     * Returns the collection as a list of T
+     *
+     * @return list<T>
+     */
+    public function toList(): array
+    {
+        return array_values($this->items);
     }
 
     /**
